@@ -2,6 +2,27 @@ import pandas as pd
 import numpy as np
 from sklearn.datasets import make_blobs
 from sklearn.preprocessing import StandardScaler
+from sklearn.preprocessing import MinMaxScaler
+from .feats import *
+
+
+
+def normalize_df(df, method):
+    
+    if method       == 'minmax':
+        df = MinMaxScaler().fit_transform(df)
+    elif method     == 'standard':
+        df = StandardScaler().fit_transform(df)
+    return df
+
+
+
+def k_proto_data(df, cat_columns):
+    
+    df_train = cobj(df, cat_columns)
+    cat_num  = [m for m,n in enumerate(df.dtypes) if n == 'object']
+    return df_train, cat_num
+
 
 def get_dummy_data(n_samples, 
                    columns, 
