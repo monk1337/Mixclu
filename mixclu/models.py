@@ -33,7 +33,11 @@ def kmeans_model(df,
 
 def kmeans_onehot_mix(df, 
                cat_columns, 
-               total_clusters, 
+               total_clusters,
+               random_state = 42,
+               max_iter     = 300, 
+               verbose      = 0, 
+               df_output    = False
                scale = None):
     
     """model : 2 
@@ -43,15 +47,28 @@ def kmeans_onehot_mix(df,
     if scale:
         print(f'scaler : {scale}')
         df_one           = normalize_df(df_one, scale)
-    result               = kmeans_model(df_one, total_clusters)
-    return result['clusters'], result['model']
+        
+    result               = kmeans_model(df              = df_one, 
+                                         no_of_clusters = total_clusters, 
+                                         random_state   = random_state, 
+                                         max_iter       = max_iter, 
+                                         verbose        = verbose, 
+                                         df_output      = df_output)
+    return result
 
 
 
 def k_prot_model(df, 
            cat_cols, 
            total_clusters, 
-           init_method = 'Huang'):
+           init_method  = 'Huang',
+           random_state = 42,
+            max_iter    = 300, 
+            verbose     = 0, 
+            df_output   = False, 
+            n_init      = 10):
+    
+
     
     
     """model : 3 
@@ -59,13 +76,21 @@ def k_prot_model(df,
     
     df_train, cat_num    = k_proto_data(df, cat_cols)
     
-    kproto               = KPrototypes(n_clusters=total_clusters, 
-                                                 init=init_method, 
-                                                 random_state=42, 
-                                                 verbose=0,
-                                                 n_jobs=-1,
-                                                 n_init=50)
+    kproto               = KPrototypes(n_clusters   = total_clusters, 
+                                       max_iter     = max_iter
+                                       init         = init_method, 
+                                       random_state = random_state,
+                                        verbose     = verbose,
+                                        n_jobs      =-1,
+                                        n_init      = n_init)
+    
     
     clusters             = kproto.fit_predict(df_train, 
                                               categorical=cat_num)
-    return clusters, kproto
+    
+    if df_output:
+        df_train['clusters']   = list(clusters)
+        return df_train, kproto
+    
+    return {'clusters': clusters, 
+            'model'   : kproto}
