@@ -77,7 +77,7 @@ def k_prot_model(df,
     df_train, cat_num    = k_proto_data(df, cat_cols)
     
     kproto               = KPrototypes(n_clusters   = total_clusters, 
-                                       max_iter     = max_iter
+                                       max_iter     = max_iter,
                                        init         = init_method, 
                                        random_state = random_state,
                                         verbose     = verbose,
