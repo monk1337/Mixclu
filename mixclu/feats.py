@@ -29,14 +29,48 @@ def one_hot_df(df, cat_columns, cat_names = False):
     return df
 
 
+# def famd_feats(df, cat_columns,
+#                    no_of_components, 
+#                    n_iter = 3):
+    
+#     df     = cobj(df, cat_columns)
+#     famd   = FAMD(n_components = no_of_components, 
+#                   n_iter       = n_iter).fit(df)
+#     result = famd.row_coordinates(df)
+#     print('explained_inertia : ', np.sum(famd.explained_inertia_))
+#     return result, np.sum(famd.explained_inertia_)
+
+def factor(data, comp = None):
+    
+    if comp:
+        total_components = comp
+    else:
+        total_components = data.shape[1]
+    
+    famd   = FAMD(n_components = total_components).fit(data)
+    res    = np.sum(famd.explained_inertia_)
+    if round(res, 2) >= 0.95 and round(res, 2) != 1.0 or comp == 0:
+        return famd
+    else:
+        return factor(data, total_components-1)
+
+
+
 def famd_feats(df, cat_columns,
-                   no_of_components, 
+                   no_of_components = 'auto', 
                    n_iter = 3):
     
+    
     df     = cobj(df, cat_columns)
-    famd   = FAMD(n_components = no_of_components, 
-                  n_iter       = n_iter).fit(df)
+    if no_of_components == 'auto':
+        famd   = factor(df)
+    else:
+        famd   = FAMD(n_components = no_of_components, 
+                      n_iter       = n_iter).fit(df)
+    
+    
     result = famd.row_coordinates(df)
+    print('explained_inertia : ', round(np.sum(famd.explained_inertia_), 2))
     return result
 
 
@@ -69,7 +103,7 @@ def hopkins(X):
 
 
 
-def pca_feats(df, con_columns, dim = 3):
+def pca_feats(df, con_columns, dim = 'auto'):
     
     
     #     Num_features        = df.select_dtypes(include=[np.number]).columns
@@ -77,11 +111,14 @@ def pca_feats(df, con_columns, dim = 3):
     
     x    = df[con_columns]
     
-    if dim <= min(x.shape[0], x.shape[1]):
-        dim = dim
+    if dim  == 'auto':
+        dim = 0.95
     else:
-        dim = min(x.shape[0], x.shape[1])
-        
+        if dim <= min(x.shape[0], x.shape[1]):
+            dim = dim
+        else:
+            dim = min(x.shape[0], x.shape[1])
+    
     print('total pca dim ', dim)
     
     pca                 = PCA(n_components = dim, whiten=True)

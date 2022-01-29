@@ -26,13 +26,14 @@ def k_proto_data(df, cat_columns):
 
 def get_dummy_data(n_samples, 
                    columns, 
-                   cat_col, 
+                   cat_col,
+                   centers        = 3,
                    missing_values = None, 
                    id_cols        = None):
     
     """generate dummy mix data types df """
     
-    X, y          = make_blobs(n_samples=n_samples, centers=3, n_features=columns, random_state=12)
+    X, y          = make_blobs(n_samples=n_samples, centers= centers, n_features=columns, random_state=12)
     
     columns_name  = [f'X{col_name}' for col_name in range(columns)]
     X             = pd.DataFrame(X, columns=columns_name)
@@ -52,4 +53,4 @@ def get_dummy_data(n_samples,
         for total_id_col in range(id_cols):
             id_col = [uuid.uuid4().hex for k in range(len(X))]
             X[f'id_{total_id_col}'] = id_col
-    return X, cat_columns
+    return X, cat_columns, y
