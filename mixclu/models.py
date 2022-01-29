@@ -37,7 +37,7 @@ def kmeans_onehot_mix(df,
                random_state = 42,
                max_iter     = 300, 
                verbose      = 0, 
-               df_output    = False
+               df_output    = False,
                scale = None):
     
     """model : 2 
@@ -94,3 +94,27 @@ def k_prot_model(df,
     
     return {'clusters': clusters, 
             'model'   : kproto}
+
+
+
+def kmeans_famd(df, 
+                cat_columns, 
+                total_clusters,
+                famd_feat_no = 5,
+                famd_iter    = 3,
+                random_state = 42,
+                kmax_iter    = 300, 
+                verbose      = 0, 
+                df_output    = False):
+    
+    """model : 4"""
+    
+    df_famd          = famd_feats(df, cat_columns, famd_feat_no, famd_iter)
+    
+    result           = kmeans_model(df              = df_famd, 
+                                     no_of_clusters = total_clusters, 
+                                     random_state   = random_state, 
+                                     max_iter       = kmax_iter, 
+                                     verbose        = verbose, 
+                                     df_output      = df_output)
+    return result
