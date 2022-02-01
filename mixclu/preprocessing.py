@@ -201,6 +201,23 @@ def trimm_correlated(df_in, cat_columns,
     return df_out
 
 
+def get_types(df):
+    
+    id_columns = [k for k in df.columns if 'id' in str(k).lower()]
+    cat_columns= df.select_dtypes(include=['object'])
+    cat_columns= [col for col in cat_columns if col not in id_columns]
+    con_columns= df.select_dtypes(include=['int','float'])
+    con_columns= [col for col in con_columns if col not in id_columns]
+    remain_cols= [col for col in df.columns if col not in id_columns 
+                  if col not in cat_columns 
+                  if col not in con_columns]
+    
+    if remain_cols:
+        return id_columns, cat_columns, con_columns, remain_cols
+    else:
+        return id_columns, cat_columns, con_columns
+
+
 
 def column_checks(df):
     
@@ -348,9 +365,16 @@ def autopreprocessing(df,
     if id_columns:
         df     = df.merge(id_frame, left_index=True, right_index=True, how='inner')
         df_raw = df_raw.merge(id_frame, left_index=True, right_index=True, how='inner')
-        return df, df_raw
-        
-    df_raw        = df_raw[list(df.columns)]
+    
+    
+    """ Presering the data types """
+    
+    final_cat_col   = [col_name for col_name in df.columns if col_name in cat_columns]
+    print(f'Final cat features {",".join(final_cat_col)}')
+    df              = cobj(df, final_cat_col)
+    df_raw          = df_raw[df.columns]
+    df_raw          = cobj(df_raw, final_cat_col)
+    
     return df, df_raw
 
 
