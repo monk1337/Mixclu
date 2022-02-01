@@ -210,7 +210,9 @@ def column_checks(df):
     if to_del:
         print(f'deleting columns -- {",".join(to_del)} -- Reason : Contain a Single Value')
         df     = df.drop(to_del, axis=1, inplace=False)
+        print('before duplicate size', df.shape)
         df     = df.drop_duplicates()
+        print('after duplicate removal', df.shape)
     
 
     return df
@@ -287,19 +289,20 @@ def autopreprocessing(df,
     df                  = df[list(set(total_columns))]
     print(f'total_columns..')
     print(" ".join(total_columns))
+    print(df.shape)
     
     """ ------------------------------------ """
     
     
     if y:
-        print("Sanity checks..")
+        print("Sanity checks..", df.shape)
         df              = sanity_checks(df, y)
     
     
-    print('converting cat columns into object types..\n')
+    print('converting cat columns into object types..\n', df.shape)
     df                  = cobj(df, cat_columns)
 
-    print('calculating missing values..\n')
+    print('calculating missing values..\n', df.shape)
     mrf                 = missing_values_table(df)
     
     print(mrf)
@@ -310,11 +313,11 @@ def autopreprocessing(df,
     df                 = column_checks(df)
     
     if allowed_missing!=0.0:
-        print('imputing values..')
+        print('imputing values..', df.shape)
         df              = DataFrameImputer().fit_transform(df)
     
     
-    print('encoding cat columns')
+    print('encoding cat columns', df.shape)
     final_cat_col   = [col_name for col_name in df.columns if col_name in cat_columns]
     print(f'Final cat features {",".join(final_cat_col)}')
     df              = cobj(df, final_cat_col)
