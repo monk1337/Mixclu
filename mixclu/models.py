@@ -69,7 +69,8 @@ def k_prot_model(df,
            total_clusters, 
            init_method  = 'Huang',
            random_state = 42,
-            max_iter    = 300, 
+            max_iter    = 300,
+            n_jobs       = 1,
             verbose     = 0, 
             df_output   = False, 
             n_init      = 10):
@@ -80,6 +81,8 @@ def k_prot_model(df,
     """model : 3 
     Huang or Cao"""
     
+    """Pass """
+    
     df_train, cat_num    = k_proto_data(df, cat_cols)
     
     kproto               = KPrototypes(n_clusters   = total_clusters, 
@@ -87,7 +90,7 @@ def k_prot_model(df,
                                        init         = init_method, 
                                        random_state = random_state,
                                         verbose     = verbose,
-                                        n_jobs      =-1,
+                                        n_jobs      = n_jobs,
                                         n_init      = n_init)
     
     
@@ -137,7 +140,8 @@ def kmedoid_model(embeddings,
                   random_state = 32, 
                   df_output    = True):
     
-    
+    """embeddings should be distance metric if metric is precomputed """
+    """ Pass """
     model        = KMedoids(n_clusters = num_clusters, 
                             metric     = metric,
                             method     = method, 
@@ -145,7 +149,7 @@ def kmedoid_model(embeddings,
                            max_iter    = max_iter, 
                            random_state=random_state).fit(embeddings)
     
-    labels       = gower_clusterer.labels_
+    labels       = model.labels_
     if df_output:
         scores                 = pd.DataFrame()
         scores['clusters']     = labels
@@ -159,23 +163,32 @@ def kmedoid_model(embeddings,
 
 
 
-def kmodels_model(df, init='Huang', 
-                  n_init=1, 
-                  verbose=2, 
+def kmodes_model(df, no_of_clusters,
+                  init         = 'Huang',
+                  n_init       = 1, 
+                  verbose      = 2,
+                  random_state = 32,
+                  n_jobs       = 1,
                   cat_dissim = None, 
-                  df_output = True):
+                  df_output  = True):
     
+    """Model : 5"""
+    """Pass """
     if cat_dissim:
-        model = KModes(n_clusters=K,
-                       init='Huang',
-                       n_init=1,
-                       cat_dissim=ng_dissim,
-                       verbose=2)
+        model = KModes(n_clusters = no_of_clusters,
+                       random_state = random_state,
+                       init       = init,
+                       n_init     = n_init,
+                       n_jobs     = n_jobs,
+                       cat_dissim = ng_dissim,
+                       verbose    = verbose)
     else:
-        model = KModes(n_clusters=K,
-                       init='Huang',
-                       n_init=1,
-                       verbose=2)
+        model = KModes(n_clusters   = no_of_clusters,
+                       random_state = random_state,
+                       init       = init,
+                       n_jobs     = n_jobs,
+                       n_init     = n_init,
+                       verbose    = verbose)
         
     clusters = model.fit_predict(df)
     

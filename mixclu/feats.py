@@ -7,6 +7,12 @@ from numpy.random import uniform
 from math import isnan
 from prince import FAMD
 from sklearn.neighbors import DistanceMetric
+from sklearn.metrics import pairwise
+
+def get_dmat(df, method):
+    df          = df.to_numpy()
+    df_matrix = sklearn.metrics.pairwise_distances(df, metric = method)
+    return df_matrix
 
 
 def cobj(df, cat_columns):
