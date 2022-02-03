@@ -125,30 +125,28 @@ def normalize_feat(df, con_columns, method):
     return df
 
 
-def encode_columns(df, tabnet_output = False):
+def encode_columns(df, columns = False):
     
     '''encode columns for 
     categorical columns
     '''
-    
-    
-    categorical_columns = []
-    categorical_dims    = {}
-    
-    for col in df.columns:
-        if df[col].dtype == np.dtype('O'):
+        
+    if columns:
+        for col in columns:
             print('encoding..')
             print(col, df[col].nunique())
             l_enc   = LabelEncoder()
             df[col] = l_enc.fit_transform(df[col].values)
-            if tabnet_output:
-                categorical_columns.append(col)
-                categorical_dims[col] = len(l_enc.classes_)
-            
-    if tabnet_output:
-        return df, categorical_columns, categorical_dims
+        
     else:
-        return df
+        for col in df.columns:
+            if df[col].dtype == np.dtype('O'):
+                print('encoding..')
+                print(col, df[col].nunique())
+                l_enc   = LabelEncoder()
+                df[col] = l_enc.fit_transform(df[col].values)
+    return df
+    
     
     
 def cobj(df, columns):

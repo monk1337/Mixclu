@@ -6,6 +6,7 @@ from random import sample
 from numpy.random import uniform
 from math import isnan
 from prince import FAMD
+from sklearn.neighbors import DistanceMetric
 
 
 def cobj(df, cat_columns):
@@ -144,3 +145,5 @@ def pca_feats(df, con_columns, dim = 'auto'):
     final_df       = pd.concat([final_df_cols, pca_df], axis = 1)
     
     return final_df, cev
+
+
