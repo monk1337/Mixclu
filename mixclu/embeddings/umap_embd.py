@@ -249,6 +249,8 @@ def evaluate_clusters(scores,  preds, labels, name='', X=None):
 
 
 def calculate_gower_distance(df, cat_columns = None):
+    
+    cat_columns = list(cat_columns)
     if cat_columns:
         variable_distances = gower.gower_matrix(df,cat_features= 
                            [True if df[k].dtypes == np.object else False 
