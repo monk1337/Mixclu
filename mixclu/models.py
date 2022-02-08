@@ -248,3 +248,70 @@ def kmodes_cont(df,
                       df_output  = mode_df_output)
     
     return k_mode_result
+
+
+
+def categorical_embedding_model(df, 
+                                bin_con_columns, 
+                                no_of_clusters = 4,
+                                bin_bins = 5,
+                                bin_drop_cols = False,
+                                bin_encode = False,
+                                n_neighbors=10, 
+                                min_dist=0.1, 
+                                random_state = 32, 
+                                max_iter = 300, 
+                                verbose = 0, 
+                                df_output = False):
+    
+    
+    recode_df = get_knn_bins(df, bin_con_columns, 
+                 bins= bin_bins, 
+                 drop_cols=bin_drop_cols, 
+                 encode = bin_encode)
+        
+    
+    cat_cols      = recode_df.select_dtypes(include='object')
+    df_one_hot, _ = one_hot_encode(recode_df, cat_cols)
+
+    umap_embedding = (umap
+                    .UMAP(metric='sokalsneath', 
+                          n_neighbors=n_neighbors,
+                          min_dist=min_dist)
+                    .fit_transform(df_one_hot))
+
+        
+    result        = kmeans_model(umap_embedding, 
+                                 no_of_clusters = no_of_clusters, 
+                                 random_state = random_state, 
+                                 max_iter     = max_iter, 
+                                 verbose      = verbose, 
+                                 df_output    = df_output)
+    
+    return umap_embedding, result
+
+
+
+
+def graph_clustering(df, con_columns,
+                     bins = 5, 
+                     bin_drop_columns = False, 
+                     bin_encode = False, 
+                     df_output = False):
+    
+    recode_df = get_knn_bins(df, 
+                             con_columns, 
+                             bins= bins, 
+                             drop_cols=bin_drop_columns, 
+                             encode = bin_encode)
+    
+    graph                = convert_df_to_sgraph_network(recode_df)
+    communities_dict     = community_louvain.best_partition(graph)
+    communites, features = convert_community_output_to_df(communities_dict)
+    graph_comunities     = merge_clusters_back_df(recode_df, communites)
+    
+    if df_output:
+        df['clusters'] = list(graph_comunities["Clusters"].values)
+        return df
+    else:
+        return {'clusters': list(graph_comunities["Clusters"].values)}
