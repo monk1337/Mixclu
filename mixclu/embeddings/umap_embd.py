@@ -5,6 +5,8 @@ import logging
 import warnings
 import umap.umap_ as umap
 from sklearn.base import BaseEstimator, ClassifierMixin
+from sklearn.preprocessing import LabelEncoder
+
 logger = logging.getLogger("denseclus")
 logger.setLevel(logging.ERROR)
 sh = logging.StreamHandler()
@@ -333,8 +335,8 @@ def FAMD_2(df, n_components=2):
     '''
 
     variable_distances = []
-    numeric_cols = data.select_dtypes(include=np.number)
-    cat_cols = data.select_dtypes(include='object')
+    numeric_cols = df.select_dtypes(include=np.number)
+    cat_cols     = df.select_dtypes(include='object')
 
     # numeric process
     normalized_df = calculate_zscore(df, numeric_cols)

@@ -8,6 +8,7 @@ from prince import FAMD
 from .preprocessing import *
 from .feats import *
 from .base_models import *
+from .embeddings.umap_embd import *
 
 
 
@@ -68,4 +69,182 @@ def kmoid_grower_umap(df,
                                           max_iter     = max_iter, 
                                           random_state = random_state, 
                                           df_output    = df_output)
-    return model_e
+    
+    return umap_embeddings, gower_distance_matrix, model_e
+
+
+
+def famd_kemans(df, 
+                cat_columns, 
+                clusters, 
+                random_state = 32, 
+                max_iter = 300, 
+                verbose = 0, 
+                df_output = False):
+    
+    df         = cobj(df, cat_columns)
+    fmd_matrix = FAMD_2(df)
+    
+    k_result   = kmeans_model(fmd_matrix, 
+                 clusters, 
+                 random_state = random_state, 
+                 max_iter     = max_iter, 
+                 verbose      = verbose, 
+                 df_output    = df_output)
+    
+    return k_result, fmd_matrix
+
+
+
+def umap_embd_model(df, 
+                    cat_columns, 
+                    no_of_clusters, 
+                    random_state = 32, 
+                    max_iter     = 300, 
+                    verbose      = 0, 
+                    df_output    = False):
+    
+    
+    df             = cobj(df, cat_columns)
+    _, emd         = umap_reduce(df)
+    
+    UMAP_clusterer = kmeans_model(emd, 
+                                 no_of_clusters = no_of_clusters, 
+                                 random_state = random_state, 
+                                 max_iter     = max_iter, 
+                                 verbose      = verbose, 
+                                 df_output    = df_output)
+    
+    return UMAP_clusterer, emd
+
+
+
+
+
+def Mirkin_model(df, 
+                 cat_columns, 
+                 no_of_clusters, 
+                 random_state = 32, 
+                 max_iter = 300, 
+                 verbose =0, 
+                 df_output = False):
+    
+    
+    
+    z_data        = zscore_preprocessing(df, 
+                                         cat_columns, 
+                                         cat_col_zscore = True)
+    
+    mirkin_result = kmeans_model(z_data, 
+                                 no_of_clusters = no_of_clusters, 
+                                 random_state = random_state, 
+                                 max_iter     = max_iter, 
+                                 verbose      = verbose, 
+                                 df_output    = df_output)
+    
+    
+    
+    return z_data, mirkin_result
+
+
+
+def column_index(df, query_cols):
+    cols = df.columns.values
+    sidx = np.argsort(cols)
+    return sidx[np.searchsorted(cols,query_cols,sorter=sidx)]
+
+
+def zscore_preprocessing(df, cat_columns, 
+                         cat_col_zscore = True):
+
+    df             = cobj(df, cat_columns)
+    continous_data = df.copy()
+    numeric_cols   = continous_data.select_dtypes(include=np.number)
+    cat_cols       = continous_data.select_dtypes(include='object')
+    
+    if cat_col_zscore:
+
+        # numeric process
+        normalized_df = calculate_zscore(continous_data, numeric_cols)
+        normalized_df = normalized_df[numeric_cols.columns]
+
+        # categorical process
+        cat_one_hot_df, one_hot_cols = one_hot_encode(continous_data, cat_cols)
+        cat_one_hot_norm_df          = calculate_zscore(cat_one_hot_df, one_hot_cols)
+
+        # Merge DataFrames
+        processed_df = pd.concat([normalized_df, cat_one_hot_norm_df], axis=1)
+    else:
+        
+        norm_num_cols = calculate_zscore(numeric_cols, numeric_cols)
+        processed_df  = pd.concat([norm_num_cols, cat_cols], axis=1)
+
+    return processed_df
+
+
+
+
+def k_prototype_z_model(df, 
+                        cat_columns, 
+                        num_of_clusters, 
+                        init_method = 'Cao', 
+                        random_state= 32, 
+                        max_iter    = 300, 
+                        n_jobs      = 1, 
+                        verbose     = 0, 
+                        df_output   = False, 
+                        n_init      = 10):
+    
+    
+    z_data              = zscore_preprocessing(df, 
+                                               cat_columns, 
+                                               cat_col_zscore = False)
+    
+    categorical_indices = column_index(z_data, cat_columns)
+    
+    model_result = k_prot_model(z_data, 
+                               list(cat_columns), 
+                               num_of_clusters, 
+                               init_method   = init_method,
+                               random_state  = random_state,
+                                max_iter     = max_iter,
+                                n_jobs       = n_jobs,
+                                verbose      = verbose, 
+                                df_output    = df_output, 
+                                n_init       = n_init)
+    
+    return model_result
+
+
+
+def kmodes_cont(df, 
+                bin_con_columns,
+                n_of_clusters,
+                bin_bins         = 5, 
+                bin_drop_cols    = True, 
+                bin_encode       = False, 
+                mode_init_method = 'Cao', 
+                mode_n_init      = 10, 
+                mode_verbose     = 0, 
+                mode_random_state= 32, 
+                mode_n_jobs      = 1, 
+                mode_cat_dissim  = None, 
+                mode_df_output   = None):
+
+    recode_df = get_knn_bins(df, bin_con_columns, 
+                     bins= bin_bins, 
+                     drop_cols=bin_drop_cols, 
+                     encode = bin_encode)
+
+
+    k_mode_result = kmodes_model(recode_df, 
+                       n_of_clusters,
+                      init         = mode_init_method,
+                      n_init       = mode_n_init, 
+                      verbose      = mode_verbose,
+                      random_state = mode_random_state,
+                      n_jobs       = mode_n_jobs,
+                      cat_dissim = mode_cat_dissim, 
+                      df_output  = mode_df_output)
+    
+    return k_mode_result
