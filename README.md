@@ -66,3 +66,6 @@ z_score, model_result = Mirkin_model(df,
                                      no_of_clusters = 4)
                                
 ```
+
+
+[[**Check all models**](https://github.com/monk1337/Mixclu/blob/main/All_models_demo.ipynb)]
