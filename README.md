@@ -1,4 +1,4 @@
-<h1 align="center">MixClu </h1>
+<h1 align="center">Mixclu </h1>
 
 <p align="center">A Python package for unsupervised mix data types clustering </p>
 <p align="center"> Contribute and Support </p>
