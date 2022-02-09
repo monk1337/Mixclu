@@ -77,5 +77,5 @@ z_score, model_result = Mirkin_model(df,
 
 - [ ] Autoencoder, Vae based clustering
 - [ ] Tabformer, tabnet based embeddings then clustering
-- [ ] Implementing paper : Affinity Learning for Mixed Data Clustering(https://www.ijcai.org/proceedings/2017/0302.pdf)
-- [ ] Implementing paper : A Multi-View Clustering for Mixed Data(https://pure.hw.ac.uk/ws/portalfiles/portal/44173473/09347440.pdf)
+- [ ] Implementing paper : [**Affinity Learning for Mixed Data Clustering**](https://www.ijcai.org/proceedings/2017/0302.pdf)
+- [ ] Implementing paper : [**A Multi-View Clustering for Mixed Data**](https://pure.hw.ac.uk/ws/portalfiles/portal/44173473/09347440.pdf)
