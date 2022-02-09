@@ -5,7 +5,7 @@
 
 
 [![GitHub license](https://img.shields.io/badge/License-Creative%20Commons%20Attribution%204.0%20International-blue)](https://github.com/monk1337/Mixclu/blob/main/README.md)
-[![GitHub commit](https://img.shields.io/github/last-commit/monk1337/Mixclu)](https://github.com/monk1337/Mixclu/commits/master)
+[![GitHub commit](https://img.shields.io/github/last-commit/monk1337/Mixclu)](https://github.com/monk1337/Mixclu/commits/main)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
 
 
