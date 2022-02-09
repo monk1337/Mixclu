@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# borrowed from https://github.com/awslabs/amazon-denseclus/blob/main/denseclus/
+# borrowed from https://github.com/awslabs/amazon-denseclus/blob/main/denseclus/, https://medium.com/analytics-vidhya/the-ultimate-guide-for-clustering-mixed-data-1eefa0b4743b
 
 import logging
 import warnings
@@ -239,9 +239,9 @@ def evaluate_clusters(scores,  preds, labels, name='', X=None):
         adj_rand = adjusted_rand_score(labels, preds)
 
         content = {'Algorithm':name,
-                   'Silhouette \u2191 ':np.NaN,
-                   'Calinski_Harabasz \u2191 ':np.NaN,
-                   'Davis Bouldin \u2193 ':np.NaN,
+                   'Silhouette \u2191 ':0.0,
+                   'Calinski_Harabasz \u2191 ':0.0,
+                   'Davis Bouldin \u2193 ':0.0,
                    'Adjusted_Mutual_Info \u2191 ':adj_mut_info,
                    'Adjusted_Rand_Score \u2191 ':adj_rand}
 
@@ -484,6 +484,7 @@ def get_knn_bins(df, cols,
 
 
 def convert_df_to_sgraph_network(df):
+    
     '''
     This function converts a dataframe into an edge list and finally
     into a network graph
@@ -508,5 +509,68 @@ def convert_df_to_sgraph_network(df):
 
     graph = nx.from_pandas_edgelist(edges_df, source='from',
                                   target='to', edge_attr=['weight'])
-  
+    
+
     return graph
+
+
+
+def convert_community_output_to_df(dict_):
+    
+    
+    
+    '''
+    this function converts the outut given by the community detection
+    algorithm
+
+
+    list_ = {'row 123':1,'row 234':2,'feature_4':1,'feature_2':2} -> Rows, Cluster
+                                                                  'row 123',1
+                                                                  'row 234',2
+
+    '''
+
+    rows = []
+    clusters = []
+    features = []
+    feature_clust = []
+    for key, value in dict_.items():
+        
+        if 'row' in str(key):
+            rows.append(key)
+            clusters.append(value)
+
+        else:
+            features.append(key)
+            feature_clust.append(value)
+
+
+    return pd.DataFrame({'Rows':rows,
+                       'Clusters':clusters}), pd.DataFrame({'Features':features,
+                                                            'Clusters':feature_clust})
+
+
+
+def merge_clusters_back_df(df, communites):
+    df = df.copy()
+    length = len(df)
+    row_names = ['row '+ str(i) for i in range(1, length+1)]
+    df['row_name'] = row_names
+    df = df.merge(communites, how='left', left_on='row_name', right_on='Rows')
+    return df.drop(['row_name', 'Rows'], axis=1, inplace=False)
+
+
+
+def score_(score, clusters, name, labels, emd = None):
+    
+    
+    if emd:
+        scores = evaluate_clusters(score,  list(clusters['clusters']),
+                               labels, name=name, 
+                               X=emd)
+    else:
+        
+        scores = evaluate_clusters(score,  list(clusters['clusters']),
+                               labels, name=name, 
+                               X=None)
+    return scores

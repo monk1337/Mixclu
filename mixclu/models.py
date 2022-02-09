@@ -15,10 +15,7 @@ from .embeddings.umap_embd import *
 
 def kmoid_grower(df, 
                    cat_columns, 
-                   no_of_clusters, 
-                   metric       = 'precomputed', 
-                   method       = 'pam', 
-                   init         = 'build', 
+                   no_of_clusters,
                    max_iter     = 300, 
                    random_state = 4, 
                    df_output    = False):
@@ -26,9 +23,9 @@ def kmoid_grower(df,
     gower_distance_matrix = calculate_gower_distance(df, cat_columns)
     model_e               = kmedoid_model(gower_distance_matrix, 
                                           no_of_clusters, 
-                                          metric       = metric , 
-                                          method       = method, 
-                                          init         = init, 
+                                          metric       = 'precomputed', 
+                                          method       = 'pam', 
+                                          init         = 'build', 
                                           max_iter     = max_iter, 
                                           random_state = random_state, 
                                           df_output    = df_output)
@@ -39,10 +36,7 @@ def kmoid_grower(df,
 
 def kmoid_grower_umap(df, 
                        cat_columns, 
-                       no_of_clusters, 
-                       metric       = 'precomputed', 
-                       method       = 'pam', 
-                       init         = 'build', 
+                       no_of_clusters,
                        max_iter     = 300,
                        n_components = None,     
                        random_state = 4, 
@@ -63,9 +57,9 @@ def kmoid_grower_umap(df,
 
     model_e               = kmedoid_model(umap_embeddings, 
                                           no_of_clusters, 
-                                          metric       = metric , 
-                                          method       = method, 
-                                          init         = init, 
+                                          metric       = 'precomputed' , 
+                                          method       = 'pam', 
+                                          init         = 'build', 
                                           max_iter     = max_iter, 
                                           random_state = random_state, 
                                           df_output    = df_output)
@@ -213,7 +207,7 @@ def k_prototype_z_model(df,
                                 df_output    = df_output, 
                                 n_init       = n_init)
     
-    return model_result
+    return z_data, model_result
 
 
 

@@ -153,3 +153,5 @@ def pca_feats(df, con_columns, dim = 'auto'):
     return final_df, cev
 
 
+
+
