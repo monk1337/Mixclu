@@ -3,6 +3,8 @@
 <p align="center">A Python package for unsupervised mix data types clustering </p>
 <p align="center"> Contribute and Support </p>
 
+Mixclu is a library for doing unsupervised mix data types clustering. This includes a variety of combination models including kmeans-onehot, gower distance, umap etc. The goal is to provide an easy to use implementation for each algorithm along with a scikit-learn API.
+
 
 [![GitHub license](https://img.shields.io/badge/License-Creative%20Commons%20Attribution%204.0%20International-blue)](https://github.com/monk1337/Mixclu/blob/main/README.md)
 [![GitHub commit](https://img.shields.io/github/last-commit/monk1337/Mixclu)](https://github.com/monk1337/Mixclu/commits/main)
@@ -71,3 +73,9 @@ z_score, model_result = Mirkin_model(df,
 
 
 
+### Todo
+
+- [ ] Autoencoder, Vae based clustering
+- [ ] Tabformer, tabnet based embeddings then clustering
+- [ ] Implementing paper : Affinity Learning for Mixed Data Clustering(https://www.ijcai.org/proceedings/2017/0302.pdf)
+- [ ] Implementing paper : A Multi-View Clustering for Mixed Data(https://pure.hw.ac.uk/ws/portalfiles/portal/44173473/09347440.pdf)
