@@ -11,6 +11,8 @@
 
  ## More features and suggestions are welcome.
 
+[**Check all models**](https://github.com/monk1337/Mixclu/blob/main/All_models_demo.ipynb)
+[**Auto Preprocessing**](https://github.com/monk1337/Mixclu/blob/main/notebooks/preprocessing.ipynb)
 
 ### Quick Start
 
@@ -68,4 +70,4 @@ z_score, model_result = Mirkin_model(df,
 ```
 
 
-[[**Check all models**](https://github.com/monk1337/Mixclu/blob/main/All_models_demo.ipynb)]
+
