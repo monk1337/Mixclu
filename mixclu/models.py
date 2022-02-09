@@ -13,7 +13,7 @@ from .embeddings.umap_embd import *
 
 
 
-def kmoid_grower(df, 
+def kmoid_gower(df, 
                    cat_columns, 
                    no_of_clusters,
                    max_iter     = 300, 
@@ -34,7 +34,7 @@ def kmoid_grower(df,
 
 
 
-def kmoid_grower_umap(df, 
+def kmoid_gower_umap(df, 
                        cat_columns, 
                        no_of_clusters,
                        max_iter     = 300,
