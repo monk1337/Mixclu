@@ -2,7 +2,7 @@
 
 <h4 align="center">A Python package for unsupervised mix data types clustering </h4>
 
-Mixclu is a library for doing unsupervised mix data types clustering. This includes a variety of combination models including kmeans-onehot, gower distance, umap etc. The goal is to provide an easy to use implementation for each algorithm along with a scikit-learn API.
+Mixclu is an open-source python package for doing unsupervised mix data types clustering. This includes a variety of combination models including kmeans-onehot, gower distance, umap etc. The goal is to provide an easy to use implementation for each algorithm along with a scikit-learn API.
 
 
 [![GitHub license](https://img.shields.io/badge/License-Creative%20Commons%20Attribution%204.0%20International-blue)](https://github.com/monk1337/Mixclu/blob/main/README.md)
