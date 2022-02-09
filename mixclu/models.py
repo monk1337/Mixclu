@@ -1,3 +1,6 @@
+# some models borrowed from https://github.com/awslabs/amazon-denseclus/blob/main/denseclus/, https://medium.com/analytics-vidhya/the-ultimate-guide-for-clustering-mixed-data-1eefa0b4743b
+
+
 from sklearn.cluster import KMeans
 from kmodes.kprototypes import KPrototypes
 from sklearn_extra.cluster import KMedoids
